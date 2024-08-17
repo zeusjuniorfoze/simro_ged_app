@@ -1,9 +1,29 @@
-<?php
+\<?php
 require_once('../conect.php');
-// on verifie si la session de pass est bien active ou pas
-if (!$_SESSION['user_id']) {
-    header('location: ../connexionInscription.php');
+
+// Vérification si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../connexionInscription.php');
+    exit();
 }
+
+// Configuration de la pagination
+$logsParPage = 10; // Nombre de logs par page
+$pageCourante = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$debut = ($pageCourante - 1) * $logsParPage;
+
+// Récupération des logs avec la limite pour la pagination
+$sql = "SELECT * FROM audit_logs ORDER BY TIMESTAMP DESC LIMIT :debut, :logsParPage";
+$stmt = $con->prepare($sql);
+$stmt->bindParam(':debut', $debut, PDO::PARAM_INT);
+$stmt->bindParam(':logsParPage', $logsParPage, PDO::PARAM_INT);
+$stmt->execute();
+$logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupération du nombre total de logs pour la pagination
+$sqlTotal = "SELECT COUNT(*) FROM audit_logs";
+$totalLogs = $con->query($sqlTotal)->fetchColumn();
+$totalPages = ceil($totalLogs / $logsParPage);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -12,12 +32,50 @@ if (!$_SESSION['user_id']) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voir les Logs</title>
-    <link rel="stylesheet" href="../boostrap//css//bootstrap.min.css">
+    <link rel="stylesheet" href="../boostrap/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .page-link {
+            color: #007bff;
+        }
+
+        .page-link:hover {
+            color: #0056b3;
+        }
+
+        .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container my-5">
-    <a href="admin.php" class="btn btn-danger btn-lg">Retour</a>
+        <a href="admin.php" class="btn btn-danger btn-lg">Retour</a>
         <h1 class="text-center mb-4">Journaux d'Audit</h1>
 
         <!-- Table pour afficher les logs -->
@@ -27,43 +85,40 @@ if (!$_SESSION['user_id']) {
                     <th>ID</th>
                     <th>Utilisateur</th>
                     <th>Action</th>
-                    <th>Document ID</th>
                     <th>Date et Heure</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Exemples de lignes, à remplacer par des données dynamiques -->
+                <?php foreach ($logs as $log): ?>
                 <tr>
-                    <td>1</td>
-                    <td>Admin1</td>
-                    <td>Ajout d'un document</td>
-                    <td>15</td>
-                    <td>2024-08-07 14:32:00</td>
+                    <td><?= htmlspecialchars($log['ID_AUDIT_LOGS']); ?></td>
+                    <td><?= htmlspecialchars($log['ID_UTILISATEUR']); ?></td>
+                    <td><?= htmlspecialchars($log['ACTION']); ?></td>
+                    <td><?= htmlspecialchars($log['TIMESTAMP']); ?></td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>User2</td>
-                    <td>Consultation d'un document</td>
-                    <td>10</td>
-                    <td>2024-08-07 13:45:00</td>
-                </tr>
-                <!-- Fin des exemples -->
+                <?php endforeach; ?>
             </tbody>
         </table>
 
-        <!-- Pagination (facultatif) -->
+        <!-- Pagination -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Précédent</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
+                <li class="page-item <?= $pageCourante <= 1 ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $pageCourante - 1; ?>">Précédent</a>
+                </li>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= $i == $pageCourante ? 'active' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                </li>
+                <?php endfor; ?>
+                <li class="page-item <?= $pageCourante >= $totalPages ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $pageCourante + 1; ?>">Suivant</a>
+                </li>
             </ul>
         </nav>
     </div>
 
-    <script src="../boostrap/js//bootstrap.min.js">
-    </script>
+    <script src="../boostrap/js/bootstrap.min.js"></script>
+</body>
 
 </html>
