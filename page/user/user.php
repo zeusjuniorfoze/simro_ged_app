@@ -40,7 +40,7 @@ if (!$_SESSION['user_id']) {
                     <div class="card-body">
                         <h5 class="card-title">Mes Documents</h5>
                         <p class="card-text">Consulter les documents qui vous sont attribués.</p>
-                        <a href="voir_doc.html" class="btn btn-light">Voir Mes Documents</a>
+                        <a href="voir_doc.php" class="btn btn-light">Voir Mes Documents</a>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@ if (!$_SESSION['user_id']) {
                     <div class="card-body">
                         <h5 class="card-title">Rechercher des Documents</h5>
                         <p class="card-text">Rechercher des documents par catégorie, titre, ou date.</p>
-                        <a href="rech_doc.html" class="btn btn-light">Rechercher</a>
+                        <a href="rech_doc.php" class="btn btn-light">Rechercher</a>
                     </div>
                 </div>
             </div>

@@ -17,49 +17,45 @@ if (!$_SESSION['user_id']) {
 
 <body>
     <div class="container my-5">
-    <a href="admin.php" class="btn btn-danger btn-lg">Retour</a>
-        <h1 class="text-center mb-4">Gérer les Utilisateurs</h1>
+    <a href="gest.php" class="btn btn-danger btn-lg">Retour</a>
+        <h1 class="text-center mb-4">Gérer les Documents</h1>
 
-        <!-- Formulaire pour ajouter un utilisateur -->
+        <!-- Formulaire pour ajouter un document -->
         <div class="card mb-4">
             <div class="card-header">
-                Ajouter un Utilisateur
+                Ajouter un Document
             </div>
             <div class="card-body">
                 <form>
                     <div class="mb-3">
-                        <label for="username" class="form-label">Nom d'utilisateur</label>
-                        <input type="text" class="form-control" id="username" placeholder="Nom d'utilisateur">
+                        <label for="docTitle" class="form-label">Titre du Document</label>
+                        <input type="text" class="form-control" id="docTitle" placeholder="Titre du document">
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="exemple@domaine.com">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" placeholder="Mot de passe">
-                    </div>
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Rôle</label>
-                        <select class="form-select" id="role">
-                            <option value="Admin">Admin</option>
-                            <option value="Utilisateur">Utilisateur</option>
-                            <option value="Gestionnaire de documents">Gestionnaire de documents</option>
+                        <label for="docCategory" class="form-label">Catégorie</label>
+                        <select class="form-select" id="docCategory">
+                            <option value="Rapports">Rapports</option>
+                            <option value="Contrats">Contrats</option>
+                            <option value="Notes">Notes</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="docFile" class="form-label">Fichier</label>
+                        <input type="file" class="form-control" id="docFile">
                     </div>
                     <button type="submit" class="btn btn-primary">Ajouter</button>
                 </form>
             </div>
         </div>
 
-        <!-- Tableau pour afficher les utilisateurs -->
+        <!-- Tableau pour afficher les documents -->
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nom d'utilisateur</th>
-                    <th>Email</th>
-                    <th>Rôle</th>
+                    <th>Titre</th>
+                    <th>Catégorie</th>
+                    <th>Date d'Ajout</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -67,9 +63,9 @@ if (!$_SESSION['user_id']) {
                 <!-- Exemples de lignes, à remplacer par des données dynamiques -->
                 <tr>
                     <td>1</td>
-                    <td>Admin1</td>
-                    <td>admin1@exemple.com</td>
-                    <td>Admin</td>
+                    <td>Rapport Annuel</td>
+                    <td>Rapports</td>
+                    <td>2024-08-01</td>
                     <td>
                         <a href="#" class="btn btn-warning btn-sm">Modifier</a>
                         <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
@@ -77,9 +73,9 @@ if (!$_SESSION['user_id']) {
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>User2</td>
-                    <td>user2@exemple.com</td>
-                    <td>Utilisateur</td>
+                    <td>Contrat Client</td>
+                    <td>Contrats</td>
+                    <td>2024-07-15</td>
                     <td>
                         <a href="#" class="btn btn-warning btn-sm">Modifier</a>
                         <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
@@ -90,7 +86,7 @@ if (!$_SESSION['user_id']) {
         </table>
     </div>
 
-    <script src="../boostrap/js//bootstrap.min.js">
+    <script src="../boostrap//js//bootstrap.min.js">
     </script>
 </body>
 

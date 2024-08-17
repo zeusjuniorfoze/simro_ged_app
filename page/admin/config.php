@@ -16,6 +16,7 @@ if (!$_SESSION['user_id']) {
 
 <body>
     <div class="container my-5">
+    <a href="admin.php" class="btn btn-danger btn-lg">Retour</a>
         <h1 class="text-center mb-4">Configurer l'Application</h1>
 
         <!-- Formulaire de configuration -->

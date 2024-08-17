@@ -40,7 +40,7 @@ if (!$_SESSION['user_id']) {
                     <div class="card-body">
                         <h5 class="card-title">Gérer les Documents</h5>
                         <p class="card-text">Ajouter, modifier ou archiver des documents.</p>
-                        <a href="gere_doc.html" class="btn btn-light">Gérer</a>
+                        <a href="gere_doc.php" class="btn btn-light">Gérer</a>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@ if (!$_SESSION['user_id']) {
                     <div class="card-body">
                         <h5 class="card-title">Suivre les Versions</h5>
                         <p class="card-text">Gérer les versions des documents.</p>
-                        <a href="suvre_ver.html" class="btn btn-light">Voir les Versions</a>
+                        <a href="suivre_ver.php" class="btn btn-light">Voir les Versions</a>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@ if (!$_SESSION['user_id']) {
                     <div class="card-body">
                         <h5 class="card-title">Gérer les Permissions</h5>
                         <p class="card-text">Attribuer des permissions aux utilisateurs.</p>
-                        <a href="gere_per.html" class="btn btn-light">Gérer les Permissions</a>
+                        <a href="gere_per.php" class="btn btn-light">Gérer les Permissions</a>
                     </div>
                 </div>
             </div>
