@@ -46,11 +46,9 @@ $totalPages = ceil($totalLogs / $logsParPage);
         .btn-danger:hover {
             background-color: #c82333;
         }
-
-        .table th,
-        .table td {
-            vertical-align: middle;
-            text-align: center;
+        .table thead th {
+            background-color: #007bff;
+            color: white;
         }
 
         .pagination {

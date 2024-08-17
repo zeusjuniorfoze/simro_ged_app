@@ -56,9 +56,16 @@
               <input type="checkbox" id="check" />
               <label for="check">Remember me</label>
             </span>
-            <a href="#" class="forgot_pw">Forgot password?</a>
+            <a href="password_oublier.php" class="forgot_pw">Forgot password?</a>
           </div>
-
+          <!-- Alert pour les erreurs -->
+          <?php if (isset($_SESSION['error'])) { ?>
+            <div class="alert alert-danger" role="alert">
+              <?php echo $_SESSION['error'];
+              unset($_SESSION['error']); // Suppression de l'erreur après affichage 
+              ?>
+            </div>
+          <?php } ?>
           <button type="submit" class="button">Login Now</button>
 
           <div class="login_signup">Don't have an account? <a href="#" id="signup">Signup</a></div>

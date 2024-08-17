@@ -69,17 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #0056b3;
         }
 
-        .table {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
+        .table thead th {
+            background-color: #007bff;
+            color: white;
         }
-
-        .table th,
-        .table td {
-            vertical-align: middle;
-        }
-
         .btn-sm {
             padding: 0.25rem 0.5rem;
         }
