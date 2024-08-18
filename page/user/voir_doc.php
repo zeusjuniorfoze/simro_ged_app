@@ -40,7 +40,7 @@ if (!$_SESSION['user_id']) {
                     <td>2024-08-01</td>
                     <td>
                         <a href="#" class="btn btn-primary btn-sm">Télécharger</a>
-                        <a href="#" class="btn btn-info btn-sm">Voir</a>
+                        
                     </td>
                 </tr>
                 <tr>
@@ -50,7 +50,6 @@ if (!$_SESSION['user_id']) {
                     <td>2024-07-15</td>
                     <td>
                         <a href="#" class="btn btn-primary btn-sm">Télécharger</a>
-                        <a href="#" class="btn btn-info btn-sm">Voir</a>
                     </td>
                 </tr>
                 <!-- Fin des exemples -->

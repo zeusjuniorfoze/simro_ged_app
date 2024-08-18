@@ -20,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['docFile'])) {
     // Déplacement du fichier uploadé vers le répertoire cible
     if (move_uploaded_file($_FILES['docFile']['tmp_name'], $filePath)) {
         try {
+            // Commencer une transaction
+            $con->beginTransaction();
+            
             // Insérer le document dans la base de données
             $sql = "INSERT INTO document (ID_UTILISATEUR, TITRE, DESCRIPTION, FILE_PATH, CREATED_AT) VALUES (:id_utilisateur, :titre, :description, :file_path, NOW())";
             $stmt = $con->prepare($sql);
@@ -32,6 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['docFile'])) {
             // Récupérer l'ID du document inséré
             $documentId = $con->lastInsertId();
 
+            // Ajouter la version initiale du document
+            $sql = "INSERT INTO document_version (ID_DOCUMENT, VERSION_NUMBER, FILE_PATH_D, CREATED_AT_D, UPDATED_BY) 
+                    VALUES (:id_document, 'v1', :file_path, NOW(), :updated_by)";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
+            $stmt->bindParam(':file_path', $filePath);
+            $stmt->bindParam(':updated_by', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->execute();
+
             // Associer le document à la catégorie choisie
             $sql = "INSERT INTO contenir (ID_DOCUMENT, ID_CATEGORIES) VALUES (:id_document, :id_categories)";
             $stmt = $con->prepare($sql);
@@ -39,9 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['docFile'])) {
             $stmt->bindParam(':id_categories', $categorieId, PDO::PARAM_INT);
             $stmt->execute();
             
+            // Commit de la transaction
+            $con->commit();
+
             $alertMessage = 'Document ajouté avec succès.';
             $alertType = 'success';
         } catch (PDOException $e) {
+            // Rollback en cas d'erreur
+            $con->rollBack();
             $alertMessage = 'Erreur : ' . $e->getMessage();
             $alertType = 'danger';
         }
@@ -67,6 +84,7 @@ $sql = "SELECT ID_CATEGORIES, NOM FROM categories";
 $stmt = $con->query($sql);
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
