@@ -9,6 +9,10 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Initialiser les messages d'alerte
+$alertMessage = '';
+$alertType = '';
+
 // Gestion de l'insertion des utilisateurs
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Récupération des données du formulaire
@@ -19,10 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Requête SQL pour insérer un nouvel utilisateur dans la base de données
     $sql = "INSERT INTO utilisateur (NOM_UTIL, EMAIL, MOT_DE_PASSE, ROLE) VALUES (:username, :email, :password, :role)";
-    
+
     // Préparation de la requête avec la connexion PDO
     $stmt = $con->prepare($sql);
-    
+
     // Liaison des valeurs avec les paramètres de la requête préparée
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
@@ -32,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Exécution de la requête et vérification du succès
     if ($stmt->execute()) {
         // Message de succès en cas d'insertion réussie
-        echo "<div style='color: green;'>Utilisateur ajouté avec succès!</div>";
+        $alertMessage = $role . ' ajouté avec succès.';
+        $alertType = 'success';
     } else {
         // Affichage d'un message d'erreur en cas de problème
         echo "<div style='color: red;'>Erreur: " . $stmt->errorInfo()[2] . "</div>";
@@ -73,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #007bff;
             color: white;
         }
+
         .btn-sm {
             padding: 0.25rem 0.5rem;
         }
@@ -91,6 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 Ajouter un Utilisateur
             </div>
             <div class="card-body">
+                <!-- Afficher les alertes -->
+                <?php if ($alertMessage): ?>
+                    <div class="alert alert-<?= htmlspecialchars($alertType) ?>">
+                        <?= htmlspecialchars($alertMessage) ?>
+                    </div>
+                <?php endif; ?>
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Nom d'utilisateur</label>
@@ -107,9 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="mb-3">
                         <label for="role" class="form-label">Rôle</label>
                         <select class="form-select" id="role" name="role" required>
-                            <option value="Admin">Admin</option>
-                            <option value="Utilisateur">Utilisateur</option>
-                            <option value="Gestionnaire de documents">Gestionnaire de documents</option>
+                            <option value="Admin">Administrateur</option>
+                            <option value="user">Utilisateur</option>
+                            <option value="gest">Gestionnaire</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Ajouter</button>
