@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['docFile'])) {
         try {
             // Commencer une transaction
             $con->beginTransaction();
-            
+
             // Insérer le document dans la base de données
             $sql = "INSERT INTO document (ID_UTILISATEUR, TITRE, DESCRIPTION, FILE_PATH, CREATED_AT) VALUES (:id_utilisateur, :titre, :description, :file_path, NOW())";
             $stmt = $con->prepare($sql);
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['docFile'])) {
             $stmt->bindParam(':description', $description);
             $stmt->bindParam(':file_path', $filePath);
             $stmt->execute();
-            
+
             // Récupérer l'ID du document inséré
             $documentId = $con->lastInsertId();
 
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['docFile'])) {
             $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
             $stmt->bindParam(':id_categories', $categorieId, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             // Commit de la transaction
             $con->commit();
 
@@ -72,10 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['docFile'])) {
 $sql = "SELECT d.ID_DOCUMENT, d.TITRE, d.DESCRIPTION, cat.NOM AS CATEGORIE, d.CREATED_AT
         FROM document d
         JOIN contenir c ON d.ID_DOCUMENT = c.ID_DOCUMENT
-        JOIN categories cat ON c.ID_CATEGORIES = cat.ID_CATEGORIES
-        WHERE d.ID_UTILISATEUR = :id_utilisateur";
+        JOIN categories cat ON c.ID_CATEGORIES = cat.ID_CATEGORIES";
 $stmt = $con->prepare($sql);
-$stmt->bindParam(':id_utilisateur', $_SESSION['user_id'], PDO::PARAM_INT);
 $stmt->execute();
 $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -98,26 +96,32 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         body {
             padding-top: 20px;
         }
+
         .card-header {
             background-color: #007bff;
             color: white;
         }
+
         .table thead th {
             background-color: #007bff;
             color: white;
         }
-        .btn-warning, .btn-danger {
+
+        .btn-warning,
+        .btn-danger {
             margin-right: 5px;
         }
+
         .alert {
-            margin-bottom: 20px; /* Espacement sous les alertes */
+            margin-bottom: 20px;
+            /* Espacement sous les alertes */
         }
     </style>
 </head>
 
 <body>
     <div class="container my-5">
-        <a href="gest.php" class="btn btn-danger btn-lg">Retour</a>
+        <a href="user.php" class="btn btn-danger btn-lg">Retour</a>
         <h1 class="text-center mb-4">Gérer les Documents</h1>
 
         <!-- Formulaire pour ajouter un document -->
@@ -132,9 +136,6 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?= htmlspecialchars($alertMessage) ?>
                     </div>
                 <?php endif; ?>
-                <?php if(isset($_SERVER['erreur'])){
-                    echo $_SESSION['erreur'];
-                } ?>
 
                 <form method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
@@ -186,8 +187,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= htmlspecialchars($document['DESCRIPTION']) ?></td>
                             <td><?= htmlspecialchars($document['CREATED_AT']) ?></td>
                             <td>
-                                <a href="modifier_document.php?id=<?= htmlspecialchars($document['ID_DOCUMENT']) ?>" class="btn btn-warning btn-sm">Modifier</a>
-                                <a href="supprimer_document.php?id=<?= htmlspecialchars($document['ID_DOCUMENT']) ?>" class="btn btn-danger btn-sm">Supprimer</a>
+                                <a href="#" class="btn btn-primary btn-sm">Télécharger</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

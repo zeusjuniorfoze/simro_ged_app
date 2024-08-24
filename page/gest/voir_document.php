@@ -37,7 +37,8 @@ if (isset($_GET['id'])) {
             readfile($filePath);
             exit;
         } else {
-            echo "Le fichier n'existe pas.";
+            $_SESSION['erreur'] = "Ce Document N'existe Plu !";
+            $alertType = 'warning';
         }
     } else {
         echo "Document non trouvé.";
@@ -45,4 +46,3 @@ if (isset($_GET['id'])) {
 } else {
     echo "Aucun document spécifié.";
 }
-?>

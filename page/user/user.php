@@ -35,7 +35,16 @@ if (!$_SESSION['user_id']) {
         </h1>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Gérer les Documents</h5>
+                        <p class="card-text">Ajouter, modifier ou archiver des documents.</p>
+                        <a href="user_gere_doc.php" class="btn btn-light">Gérer</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="card text-white bg-info mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Mes Documents</h5>
@@ -44,11 +53,11 @@ if (!$_SESSION['user_id']) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card text-white bg-primary mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Rechercher des Documents</h5>
-                        <p class="card-text">Rechercher des documents par catégorie, titre, ou date.</p>
+                        <p class="card-text">Rechercher des documents</p>
                         <a href="rech_doc.php" class="btn btn-light">Rechercher</a>
                     </div>
                 </div>
