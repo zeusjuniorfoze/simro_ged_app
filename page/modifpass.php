@@ -1,32 +1,38 @@
 <?php
 require_once('conect.php');
-// on verifie si la session de pass est bien activée
-if (!$_SESSION['recup']) {
+
+// Vérifier si la session de récupération est active
+if (!isset($_SESSION['recup'])) {
     header('location: connexionInscription.php');
+    exit();
 }
+
 $email = $_SESSION['recup'];
+$erreu = "";
+$erre = "";
+
 if (isset($_POST['login'])) {
-    $erreu = "";
-    $erre = "";
-    if (isset($_POST['pass']) and !empty($_POST['pass']) and isset($_POST['pass2']) and !empty($_POST['pass2'])) {
-        $pass1 = $_POST['pass']; // Mot de passe en clair
-        $pass2 = $_POST['pass2']; // Mot de passe en clair
-        if ($pass1 != $pass2) {
-            $erre = "Les mots de passe ne correspondent pas !!";
+    if (!empty($_POST['pass']) && !empty($_POST['pass2'])) {
+        $pass1 = $_POST['pass'];
+        $pass2 = $_POST['pass2'];
+
+        if ($pass1 !== $pass2) {
+            $erre = "Les mots de passe ne correspondent pas !";
         } else {
-            $hashedPass = password_hash($pass1, PASSWORD_BCRYPT); // Hachage du mot de passe validé
+            $hashedPass = password_hash($pass1, PASSWORD_BCRYPT);
             $sql = $con->prepare("UPDATE utilisateur SET MOT_DE_PASSE=? WHERE EMAIL=?");
             $sql->execute(array($hashedPass, $email));
             header('location: connexionInscription.php');
+            exit();
         }
     } else {
-        $erreu = "Veuillez remplir tous les champs";
+        $erreu = "Veuillez remplir tous les champs.";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
     <link rel="stylesheet" href="boostrap/css/bootstrap.min.css">
@@ -35,52 +41,95 @@ if (isset($_POST['login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="boxicons/css/boxicons.min.css" rel="stylesheet">
 
-    <title>MODIFICATION</title>
+    <title>Modification du Mot de Passe</title>
 </head>
 
 <body>
-    <div>
-        <nav class="cc-nav navbar nav-dark ">
-            <div class="container-fluid">
-                <!-- image du logo -->
-                <a class="navbar-brand py-1 mx-3" href="home.php">
-                    <img src="img/simro_logo.PNG" alt="" width="100" height="100" class="d-inline-block align-text-top">
-                </a>
-                <!-- liste des element du  menue -->
-                <h1 class="fw-bolder"><i style="color: #120cef;">SIMRO</i><i style="color: #f3940b;">GED</i></h1>
-                <ul class="navbar-nav ms-auto mb-2lg-0">
-                    <li><a style=" font-size: 25px; " href="connexionInscription.php" class="btn btn-lg btn-in my-2"><i class='bx bx-user-plus'></i> S'INSCRIRE</a></li>
-                    <li><a style=" font-size: 25px; " href="connexionInscription.php" class="btn btn-con"><i class='bx bx-log-in'></i> SE CONNECTER</a></li>
-                </ul>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="home.php">
+                <img src="img/simro_logo.PNG" alt="SIMRO Logo" width="100" height="100" class="d-inline-block align-text-top">
+            </a>
+            <h1 class="fw-bolder"><i style="color: #120cef;">SIMRO</i><i style="color: #f3940b;">GED</i></h1>
+            <div class="d-flex">
+                <a href="connexionInscription.php" class="btn btn-primary me-2"><i class='bx bx-user-plus'></i> S'INSCRIRE</a>
+                <a href="connexionInscription.php" class="btn btn-secondary"><i class='bx bx-log-in'></i> SE CONNECTER</a>
             </div>
-        </nav>
-    </div>
-    <div>
-        <section>
-            <form action="" method="POST">
-                <h2>MODIFICATION DU MOT DE PASS </h2>
+        </div>
+    </nav>
 
-                <fieldset class="b">
-                    <label form="pass">Veillez Entrer Votre Nouveau Mot De Pass </label><br>
-                    <input type="Password" name="pass" id="pass"><br>
-                    <label form="pass">Veillez Confirmert Le Mot De Pass </label><br>
-                    <input type="Password" name="pass2" id="pass2">
-                    <?php if (isset($erreu)) { ?>
-                        <p class='erreu'><?php echo "$erreu"; ?></p>
-                    <?php } ?>
+    <div class="container my-5">
+        <section class="bg-light p-5 rounded shadow">
+            <form action="" method="POST" class="needs-validation" novalidate>
+                <h2 class="mb-4">Modification du Mot de Passe</h2>
 
-                    <?php if (isset($erre)) { ?>
-                        <p class='erreu'><?php echo "$erre"; ?></p>
-                    <?php } ?>
-                </fieldset><br>
-                <div class="button-container">
-                    <button type="button" class="cancel-button" onclick="window.location.href = 'password_oublier.php';">Annuler</button>
-                    <button type="submit" class="submit-button" name="login">Modifier</button>
+                <div class="mb-3">
+                    <label for="pass" class="form-label">Veuillez entrer votre nouveau mot de passe :</label>
+                    <input type="password" name="pass" id="pass" class="form-control" required>
+                    <div class="invalid-feedback">
+                        Veuillez entrer un mot de passe.
+                    </div>
                 </div>
 
+                <div class="mb-3">
+                    <label for="pass2" class="form-label">Veuillez confirmer le mot de passe :</label>
+                    <input type="password" name="pass2" id="pass2" class="form-control" required>
+                    <div class="invalid-feedback">
+                        Veuillez confirmer votre mot de passe.
+                    </div>
+                </div>
+
+                <?php if (!empty($erreu)) { ?>
+                    <div class="alert alert-warning" role="alert">
+                        <?php echo $erreu; ?>
+                    </div>
+                <?php } ?>
+
+                <?php if (!empty($erre)) { ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo $erre; ?>
+                    </div>
+                <?php } ?>
+
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href = 'password_oublier.php';">Annuler</button>
+                    <button type="submit" class="btn btn-primary" name="login">Modifier</button>
+                </div>
             </form>
         </section>
     </div>
+
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Bootstrap validation script
+        (function() {
+            'use strict'
+
+            var forms = document.querySelectorAll('.needs-validation')
+
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+        // Validation des mots de passe
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var pass1 = document.getElementById('pass').value;
+            var pass2 = document.getElementById('pass2').value;
+
+            if (pass1 !== pass2) {
+                e.preventDefault();
+                alert("Les mots de passe ne correspondent pas !");
+            }
+        });
+    </script>
 </body>
 
 </html>
