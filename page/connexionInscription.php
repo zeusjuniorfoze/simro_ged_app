@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <!-- Source de ce formulaire de connexion -->
 <!-- Coding by CodingLab || www.codinglabweb.com -->
@@ -8,6 +9,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Connexion & Inscription</title>
+  <link rel="stylesheet" href="boostrap/css/bootstrap.min.css" />
   <link rel="stylesheet" href="css/inscrip_con.css" />
   <!-- Boxicons -->
   <link rel="stylesheet" href="boxicons/css/boxicons.min.css" />
@@ -30,6 +32,14 @@
       <div class="form login_form">
         <form action="php/connexion.php" method="POST">
           <h2>Login</h2>
+            <!-- Alert pour les erreurs -->
+            <?php if (isset($_SESSION['error'])) { ?>
+            <div class="alert alert-danger" role="alert">
+              <?php echo $_SESSION['error'];
+              unset($_SESSION['error']); // Suppression de l'erreur après affichage 
+              ?>
+            </div>
+          <?php } ?>
           <!-- Liste déroulante -->
           <div class="input_box">
             <select name="role" class="dropdown">
@@ -58,14 +68,6 @@
             </span>
             <a href="password_oublier.php" class="forgot_pw">Forgot password?</a>
           </div>
-          <!-- Alert pour les erreurs -->
-          <?php if (isset($_SESSION['error'])) { ?>
-            <div class="alert alert-danger" role="alert">
-              <?php echo $_SESSION['error'];
-              unset($_SESSION['error']); // Suppression de l'erreur après affichage 
-              ?>
-            </div>
-          <?php } ?>
           <button type="submit" class="button">Login Now</button>
 
           <div class="login_signup">Don't have an account? <a href="#" id="signup">Signup</a></div>
@@ -77,6 +79,14 @@
       <div class="form signup_form">
         <form action="php/inscription.php" method="POST">
           <h2>Signup</h2>
+          
+          <?php if (isset($_SESSION['success'])) { ?>
+            <div class="alert alert-success" role="alert">
+              <?php echo $_SESSION['success'];
+              unset($_SESSION['success']); // Suppression du succès après affichage 
+              ?>
+            </div>
+          <?php } ?>
 
           <div class="input_box">
             <input type="text" name="prenom" placeholder="Enter your first name" required />
@@ -112,9 +122,3 @@
 </body>
 
 </html>
-
-<?php
-if (isset($_GET['erreur']) && $_GET['erreur'] == 1) {
-  echo "<p style='color: red;'>Identifiants incorrects. Veuillez réessayer.</p>";
-}
-?>

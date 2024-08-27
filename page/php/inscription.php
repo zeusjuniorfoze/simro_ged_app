@@ -1,5 +1,4 @@
 <?php
-
 try {
     require_once('../conect.php');
 
@@ -11,9 +10,8 @@ try {
 
     // Vérification si les mots de passe correspondent
     if ($mot_de_passe !== $mot_de_passe_confirme) {
-        echo "<script>alert(' Les Mots De Passe Ne Correspondents Pas ! ');
-        window.location.href = '../connexionInscription.php';
-        </script>";
+        $_SESSION['error'] = 'Les mots de passe ne correspondent pas !';
+        header('Location: ../connexionInscription.php');
         exit(); // Stoppe l'exécution si les mots de passe ne correspondent pas
     }
 
@@ -26,24 +24,23 @@ try {
     $recup = $sql->fetch();
 
     if ($recup && $recup['EMAIL'] === $email) {
-        echo "<script>alert(' Entree Un Email Valide ! ');
-        window.location.href = '../connexionInscription.php';
-        </script>";
+        $_SESSION['error'] = 'Cet email est déjà utilisé !';
+        header('Location: ../connexionInscription.php');
     } else {
         // Préparation de la requête SQL pour l'insertion
         $stmt = $con->prepare("INSERT INTO utilisateur (NOM_UTIL, EMAIL, MOT_DE_PASSE, ROLE) VALUES (?, ?, ?, ?)");
         $stmt->execute([$prenom, $email, $mot_de_passe_hache, "user"]);
 
-        // Redirection après inscription réussie
-        echo '<script>';
-        echo 'if(confirm("Inscription réussie. Appuyez sur OK puis sur login pour vous connecter.")){';
-        echo 'window.location.href = "../connexionInscription.php";';
-        echo '}';
-        echo '</script>';
+        $_SESSION['success'] = 'Inscription réussie. Vous pouvez maintenant vous connecter.';
+        header('Location: ../connexionInscription.php');
     }
+    exit();
 } catch (PDOException $e) {
-    echo "Erreur d'inscription: " . $e->getMessage();
+    $_SESSION['error'] = "Erreur d'inscription: " . $e->getMessage();
+    header('Location: ../connexionInscription.php');
+    exit();
 }
 
 // Fermeture de la connexion
 $con = null;
+?>
