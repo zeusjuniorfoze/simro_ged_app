@@ -9,8 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Connexion & Inscription</title>
   <link rel="stylesheet" href="css/inscrip_con.css" />
-  <!-- Unicons -->
-  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+  <!-- Boxicons -->
+  <link rel="stylesheet" href="boxicons/css/boxicons.min.css" />
 </head>
 
 <body>
@@ -25,7 +25,7 @@
   <!-- Home -->
   <section class="home">
     <div class="form_container">
-      <i class="uil uil-times form_close"></i>
+      <i class="bx bx-x form_close"></i>
       <!-- Login From -->
       <div class="form login_form">
         <form action="php/connexion.php" method="POST">
@@ -34,21 +34,21 @@
           <div class="input_box">
             <select name="role" class="dropdown">
               <option value="" disabled selected>Choix du type de compte</option>
-              <option value="admin">Administrateu</option>
+              <option value="admin">Administrateur</option>
               <option value="gest">Gestionnaire</option>
-              <option value="user">Utulisateur</option>
+              <option value="user">Utilisateur</option>
             </select>
-            <i class="uil uil-list-ui-alt dropdown_icon"></i>
+            <i class="bx bx-list-ul dropdown_icon"></i>
           </div>
           <div class="input_box">
             <input type="email" name="email" placeholder="Enter your email" required />
-            <i class="uil uil-envelope-alt email"></i>
+            <i class="bx bx-envelope email"></i>
           </div>
 
           <div class="input_box">
             <input type="password" name="mot_de_passe" placeholder="Enter your password" required />
-            <i class="uil uil-lock password"></i>
-            <i class="uil uil-eye-slash pw_hide"></i>
+            <i class="bx bx-lock password"></i>
+            <i class="bx bx-low-vision pw_hide"></i>
           </div>
 
           <div class="option_field">
@@ -80,24 +80,24 @@
 
           <div class="input_box">
             <input type="text" name="prenom" placeholder="Enter your first name" required />
-            <i class="uil uil-user password"></i>
+            <i class="bx bx-user password"></i>
           </div>
 
           <div class="input_box">
             <input type="email" name="email" placeholder="Enter your email" required />
-            <i class="uil uil-envelope-alt email"></i>
+            <i class="bx bx-envelope email"></i>
           </div>
 
           <div class="input_box">
             <input type="password" name="mot_de_passe" placeholder="Create password" required />
-            <i class="uil uil-lock password"></i>
-            <i class="uil uil-eye-slash pw_hide"></i>
+            <i class="bx bx-lock password"></i>
+            <i class="bx bx-low-vision pw_hide"></i>
           </div>
 
           <div class="input_box">
             <input type="password" name="confirm_mot_de_passe" placeholder="Confirm password" required />
-            <i class="uil uil-lock password"></i>
-            <i class="uil uil-eye-slash pw_hide"></i>
+            <i class="bx bx-lock password"></i>
+            <i class="bx bx-low-vision pw_hide"></i>
           </div>
 
           <button type="submit" class="button">Signup Now</button>
