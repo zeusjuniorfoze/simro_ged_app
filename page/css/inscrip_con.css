@@ -243,3 +243,12 @@ a {
 .input_box select:focus + .dropdown_icon {
   color: #7b3fe4;
 }
+
+/* pour gere les mots de passes */
+    .validity-message {
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+    .validity-message.red { color: red; }
+    .validity-message.orange { color: orange; }
+    .validity-message.green { color: green; }
