@@ -48,8 +48,8 @@
       <div class="form login_form">
         <form action="php/connexion.php" method="POST">
           <h2>Login</h2>
-              <!-- Alert pour les erreurs -->
-              <?php if (isset($_SESSION['error'])) { ?>
+          <!-- Alert pour les erreurs -->
+          <?php if (isset($_SESSION['error'])) { ?>
             <div class="alert alert-danger" role="alert">
               <?php echo $_SESSION['error'];
               unset($_SESSION['error']); // Suppression de l'erreur après affichage 
@@ -96,7 +96,7 @@
       <div class="form signup_form">
         <form action="php/inscription.php" method="POST">
           <h2>Signup</h2>
-                    
+
           <?php if (isset($_SESSION['success'])) { ?>
             <div class="alert alert-success" role="alert">
               <?php echo $_SESSION['success'];
@@ -157,11 +157,11 @@
       const numberCriteria = /[0-9]/.test(password);
 
       if (lengthCriteria && specialCharCriteria && numberCriteria) {
-        return 'green';
+        return 'green'; // Strong
       } else if (lengthCriteria) {
-        return 'orange';
+        return 'orange'; // Medium
       } else {
-        return 'red';
+        return 'red'; // Weak
       }
     };
 
@@ -176,8 +176,11 @@
       }
     };
 
-    // Gestion des événements sur le champ email de connexion
+    // Validation de connexion
+    const loginForm = document.querySelector('.login_form form');
     const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+
     loginEmail.addEventListener('input', () => {
       if (loginEmail.value) {
         if (validateEmail(loginEmail.value)) {
@@ -190,8 +193,6 @@
       }
     });
 
-    // Gestion des événements sur le champ mot de passe de connexion
-    const loginPassword = document.getElementById('login-password');
     loginPassword.addEventListener('input', () => {
       if (loginPassword.value) {
         const strength = evaluatePassword(loginPassword.value);
@@ -207,8 +208,22 @@
       }
     });
 
-    // Gestion des événements sur le champ email d'inscription
+    loginForm.addEventListener('submit', (e) => {
+      const emailValid = validateEmail(loginEmail.value);
+      const passwordStrength = evaluatePassword(loginPassword.value);
+
+      if (!emailValid || passwordStrength === 'red') {
+        e.preventDefault(); // Empêche l'envoi du formulaire
+        alert('Email invalide ou mot de passe trop court !');
+      }
+    });
+
+    // Validation d'inscription
+    const signupForm = document.querySelector('.signup_form form');
     const signupEmail = document.getElementById('signup-email');
+    const signupPassword = document.getElementById('signup-password');
+    const confirmPassword = document.getElementById('confirm-password');
+
     signupEmail.addEventListener('input', () => {
       if (signupEmail.value) {
         if (validateEmail(signupEmail.value)) {
@@ -221,8 +236,6 @@
       }
     });
 
-    // Gestion des événements sur le champ mot de passe d'inscription
-    const signupPassword = document.getElementById('signup-password');
     signupPassword.addEventListener('input', () => {
       if (signupPassword.value) {
         const strength = evaluatePassword(signupPassword.value);
@@ -238,8 +251,6 @@
       }
     });
 
-    // Gestion des événements sur le champ confirmation de mot de passe d'inscription
-    const confirmPassword = document.getElementById('confirm-password');
     confirmPassword.addEventListener('input', () => {
       if (confirmPassword.value) {
         if (confirmPassword.value === signupPassword.value) {
@@ -249,6 +260,17 @@
         }
       } else {
         showValidationMessage('confirm-password-message', '', '');
+      }
+    });
+
+    signupForm.addEventListener('submit', (e) => {
+      const emailValid = validateEmail(signupEmail.value);
+      const passwordStrength = evaluatePassword(signupPassword.value);
+      const passwordsMatch = signupPassword.value === confirmPassword.value;
+
+      if (!emailValid || passwordStrength === 'red' || !passwordsMatch) {
+        e.preventDefault(); // Empêche l'envoi du formulaire
+        alert('Veuillez vérifier votre email, la force de votre mot de passe, ou que les mots de passe correspondent.');
       }
     });
   });
