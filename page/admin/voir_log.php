@@ -1,5 +1,5 @@
 \<?php
-require_once('../conect.php');
+ require_once('../conect.php');
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {

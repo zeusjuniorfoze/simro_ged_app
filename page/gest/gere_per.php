@@ -1,5 +1,5 @@
 <?php
-require_once('../conect.php');
+ require_once('../conect.php');
 
 // Vérifier si la session est active
 if (!isset($_SESSION['user_id'])) {

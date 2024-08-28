@@ -1,6 +1,6 @@
 <?php
 // Inclusion du fichier de connexion à la base de données
-require_once('../conect.php');
+ require_once('../conect.php');
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
@@ -106,19 +106,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Nom d'utilisateur</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" required>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur"  d>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="exemple@domaine.com" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="exemple@domaine.com"  d>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe"  d>
                     </div>
                     <div class="mb-3">
                         <label for="role" class="form-label">Rôle</label>
-                        <select class="form-select" id="role" name="role" required>
+                        <select class="form-select" id="role" name="role"  d>
                             <option value="Admin">Administrateur</option>
                             <option value="user">Utilisateur</option>
                             <option value="gest">Gestionnaire</option>

@@ -57,7 +57,7 @@
             </div>
           <?php } ?>
           <div class="input_box">
-            <select name="role" class="dropdown">
+            <select name="role" class="dropdown" require >
               <option value="" disabled selected>Choix du type de compte</option>
               <option value="admin">Administrateur</option>
               <option value="gest">Gestionnaire</option>
@@ -66,13 +66,13 @@
             <i class="bx bx-list-ul dropdown_icon"></i>
           </div>
           <div class="input_box">
-            <input type="email" name="email" id="login-email" placeholder="Enter your email" required />
+            <input type="email" name="email" id="login-email" placeholder="Enter your email" require  />
             <i class="bx bx-envelope email"></i>
             <div id="email-message" class="validity-message"></div>
           </div>
 
           <div class="input_box">
-            <input type="password" name="mot_de_passe" id="login-password" placeholder="Enter your password" required />
+            <input type="password" name="mot_de_passe" id="login-password" placeholder="Enter your password" require />
             <i class="bx bx-lock password"></i>
             <i class="bx bx-low-vision pw_hide"></i>
             <div id="password-message" class="validity-message"></div>
@@ -106,25 +106,25 @@
           <?php } ?>
 
           <div class="input_box">
-            <input type="text" name="prenom" placeholder="Enter your first name" required />
+            <input type="text" name="prenom" placeholder="Enter your first name"  require />
             <i class="bx bx-user password"></i>
           </div>
 
           <div class="input_box">
-            <input type="email" name="email" id="signup-email" placeholder="Enter your email" required />
+            <input type="email" name="email" id="signup-email" placeholder="Enter your email"  require />
             <i class="bx bx-envelope email"></i>
             <div id="signup-email-message" class="validity-message"></div>
           </div>
 
           <div class="input_box">
-            <input type="password" name="mot_de_passe" id="signup-password" placeholder="Create password" required />
+            <input type="password" name="mot_de_passe" id="signup-password" placeholder="Create password"  require />
             <i class="bx bx-lock password"></i>
             <i class="bx bx-low-vision pw_hide"></i>
             <div id="signup-password-message" class="validity-message"></div>
           </div>
 
           <div class="input_box">
-            <input type="password" name="confirm_mot_de_passe" id="confirm-password" placeholder="Confirm password" required />
+            <input type="password" name="confirm_mot_de_passe" id="confirm-password" placeholder="Confirm password"  require />
             <i class="bx bx-lock password"></i>
             <i class="bx bx-low-vision pw_hide"></i>
             <div id="confirm-password-message" class="validity-message"></div>

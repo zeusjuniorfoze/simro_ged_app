@@ -43,4 +43,3 @@ try {
 
 // Fermeture de la connexion
 $con = null;
-?>

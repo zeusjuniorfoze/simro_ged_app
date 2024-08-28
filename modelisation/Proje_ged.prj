@@ -20,7 +20,7 @@
 CaseSensitive=No
 DisplayName=Yes
 EnableTrans=No
-EnableRequirements=No
+Enable ments=No
 
 [ModelOptions\Prj options\NamingOptionsTemplates]
 

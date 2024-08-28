@@ -20,7 +20,7 @@ try {
         $_SESSION['user_id'] = $user['ID_UTILISATEUR'];
         $_SESSION['role'] = $role;
         $_SESSION['nom_util'] = $user['NOM_UTIL'];
-        
+
         // Redirection en fonction du rôle
         if ($role === 'admin') {
             header('Location: ../admin/admin.php');
@@ -45,4 +45,3 @@ try {
     header('Location: ../connexionInscription.php');
     exit();
 }
-?>

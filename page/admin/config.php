@@ -1,5 +1,5 @@
 <?php
-require_once('../conect.php');
+ require_once('../conect.php');
 // on verifie si la session de pass est bien active ou pas
 if (!$_SESSION['user_id']) {
     header('location: ../connexionInscription.php');

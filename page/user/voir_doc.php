@@ -1,5 +1,5 @@
 <?php
-require_once('../conect.php');
+ require_once('../conect.php');
 
 // On vérifie si la session de l'utilisateur est active
 if (!$_SESSION['user_id']) {
@@ -92,11 +92,11 @@ if (isset($_GET['id'])) {
                     <form method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="docTitle" class="form-label">Titre du Document</label>
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($doc['TITRE']) ?>" id="docTitle" name="docTitle" placeholder="Titre du document" required>
+                            <input type="text" class="form-control" value="<?= htmlspecialchars($doc['TITRE']) ?>" id="docTitle" name="docTitle" placeholder="Titre du document"  d>
                         </div>
                         <div class="mb-3">
                             <label for="docCategory" class="form-label">Catégorie</label>
-                            <select class="form-select" id="docCategory" name="docCategory" required>
+                            <select class="form-select" id="docCategory" name="docCategory"  d>
                                 <?php foreach ($categories as $category): ?>
                                     <option value="<?= htmlspecialchars($category['ID_CATEGORIES']) ?>" <?= $category['ID_CATEGORIES'] == $category['ID_CATEGORIES'] ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($category['NOM']) ?>
@@ -106,7 +106,7 @@ if (isset($_GET['id'])) {
                         </div>
                         <div class="mb-3">
                             <label for="docDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="docDescription" name="docDescription" rows="3" placeholder="Description du document" required><?= htmlspecialchars($doc['DESCRIPTION']) ?></textarea>
+                            <textarea class="form-control" id="docDescription" name="docDescription" rows="3" placeholder="Description du document"  d><?= htmlspecialchars($doc['DESCRIPTION']) ?></textarea>
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Modifier</button>

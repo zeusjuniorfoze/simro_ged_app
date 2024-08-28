@@ -2067,7 +2067,7 @@ class Dropdown extends BaseComponent {
       Manipulator.setDataAttribute(this._menu, 'popper', 'none');
     } else {
       if (typeof Popper === 'undefined') {
-        throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org)');
+        throw new TypeError('Bootstrap\'s dropdowns   Popper (https://popper.js.org)');
       }
 
       let referenceElement = this._element;
@@ -2180,8 +2180,8 @@ class Dropdown extends BaseComponent {
     typeCheckConfig(NAME$8, config, this.constructor.DefaultType);
 
     if (typeof config.reference === 'object' && !isElement(config.reference) && typeof config.reference.getBoundingClientRect !== 'function') {
-      // Popper virtual elements require a getBoundingClientRect method
-      throw new TypeError(`${NAME$8.toUpperCase()}: Option "reference" provided type "object" without a required "getBoundingClientRect" method.`);
+      // Popper virtual elements   a getBoundingClientRect method
+      throw new TypeError(`${NAME$8.toUpperCase()}: Option "reference" provided type "object" without a  d "getBoundingClientRect" method.`);
     }
 
     return config;
@@ -3546,7 +3546,7 @@ const TRIGGER_MANUAL = 'manual';
 class Tooltip extends BaseComponent {
   constructor(element, config) {
     if (typeof Popper === 'undefined') {
-      throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
+      throw new TypeError('Bootstrap\'s tooltips   Popper (https://popper.js.org)');
     }
 
     super(element); // private

@@ -2091,7 +2091,7 @@
     phase: 'write',
     fn: applyStyles,
     effect: effect$2,
-    requires: ['computeStyles']
+     s: ['computeStyles']
   };
 
   function getBasePlacement(placement) {
@@ -2359,8 +2359,8 @@
     phase: 'main',
     fn: arrow,
     effect: effect$1,
-    requires: ['popperOffsets'],
-    requiresIfExists: ['preventOverflow']
+     s: ['popperOffsets'],
+     sIfExists: ['preventOverflow']
   };
 
   var unsetSides = {
@@ -3064,7 +3064,7 @@
     enabled: true,
     phase: 'main',
     fn: flip,
-    requiresIfExists: ['offset'],
+     sIfExists: ['offset'],
     data: {
       _skip: false
     }
@@ -3125,7 +3125,7 @@
     name: 'hide',
     enabled: true,
     phase: 'main',
-    requiresIfExists: ['preventOverflow'],
+     sIfExists: ['preventOverflow'],
     fn: hide
   };
 
@@ -3177,7 +3177,7 @@
     name: 'offset',
     enabled: true,
     phase: 'main',
-    requires: ['popperOffsets'],
+     s: ['popperOffsets'],
     fn: offset
   };
 
@@ -3318,7 +3318,7 @@
     enabled: true,
     phase: 'main',
     fn: preventOverflow,
-    requiresIfExists: ['offset']
+     sIfExists: ['offset']
   };
 
   function getHTMLElementScroll(element) {
@@ -3388,8 +3388,8 @@
 
     function sort(modifier) {
       visited.add(modifier.name);
-      var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
-      requires.forEach(function (dep) {
+      var  s = [].concat(modifier. s || [], modifier. sIfExists || []);
+       s.forEach(function (dep) {
         if (!visited.has(dep)) {
           var depModifier = map.get(dep);
 
@@ -3825,7 +3825,7 @@
         Manipulator.setDataAttribute(this._menu, 'popper', 'none');
       } else {
         if (typeof Popper === 'undefined') {
-          throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org)');
+          throw new TypeError('Bootstrap\'s dropdowns   Popper (https://popper.js.org)');
         }
 
         let referenceElement = this._element;
@@ -3938,8 +3938,8 @@
       typeCheckConfig(NAME$8, config, this.constructor.DefaultType);
 
       if (typeof config.reference === 'object' && !isElement$1(config.reference) && typeof config.reference.getBoundingClientRect !== 'function') {
-        // Popper virtual elements require a getBoundingClientRect method
-        throw new TypeError(`${NAME$8.toUpperCase()}: Option "reference" provided type "object" without a required "getBoundingClientRect" method.`);
+        // Popper virtual elements   a getBoundingClientRect method
+        throw new TypeError(`${NAME$8.toUpperCase()}: Option "reference" provided type "object" without a  d "getBoundingClientRect" method.`);
       }
 
       return config;
@@ -5304,7 +5304,7 @@
   class Tooltip extends BaseComponent {
     constructor(element, config) {
       if (typeof Popper === 'undefined') {
-        throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
+        throw new TypeError('Bootstrap\'s tooltips   Popper (https://popper.js.org)');
       }
 
       super(element); // private

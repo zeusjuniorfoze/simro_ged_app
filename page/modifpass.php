@@ -1,5 +1,5 @@
 <?php
-require_once('conect.php');
+ require_once('conect.php');
 
 // Vérifier si la session de récupération est active
 if (!isset($_SESSION['recup'])) {
@@ -69,7 +69,7 @@ if (isset($_POST['login'])) {
 
                 <div class="mb-3">
                     <label for="pass" class="form-label">Veuillez entrer votre nouveau mot de passe :</label>
-                    <input type="password" name="pass" id="pass" class="form-control" required>
+                    <input type="password" name="pass" id="pass" class="form-control"  d>
                     <div class="invalid-feedback">
                         Veuillez entrer un mot de passe.
                     </div>
@@ -77,7 +77,7 @@ if (isset($_POST['login'])) {
 
                 <div class="mb-3">
                     <label for="pass2" class="form-label">Veuillez confirmer le mot de passe :</label>
-                    <input type="password" name="pass2" id="pass2" class="form-control" required>
+                    <input type="password" name="pass2" id="pass2" class="form-control"  d>
                     <div class="invalid-feedback">
                         Veuillez confirmer votre mot de passe.
                     </div>

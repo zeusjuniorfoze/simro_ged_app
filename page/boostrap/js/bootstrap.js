@@ -4,7 +4,7 @@
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@popperjs/core')) :
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory( ('@popperjs/core')) :
   typeof define === 'function' && define.amd ? define(['@popperjs/core'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.bootstrap = factory(global.Popper));
 }(this, (function (Popper) { 'use strict';
@@ -2093,7 +2093,7 @@
         Manipulator.setDataAttribute(this._menu, 'popper', 'none');
       } else {
         if (typeof Popper__namespace === 'undefined') {
-          throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org)');
+          throw new TypeError('Bootstrap\'s dropdowns   Popper (https://popper.js.org)');
         }
 
         let referenceElement = this._element;
@@ -2206,8 +2206,8 @@
       typeCheckConfig(NAME$8, config, this.constructor.DefaultType);
 
       if (typeof config.reference === 'object' && !isElement(config.reference) && typeof config.reference.getBoundingClientRect !== 'function') {
-        // Popper virtual elements require a getBoundingClientRect method
-        throw new TypeError(`${NAME$8.toUpperCase()}: Option "reference" provided type "object" without a required "getBoundingClientRect" method.`);
+        // Popper virtual elements   a getBoundingClientRect method
+        throw new TypeError(`${NAME$8.toUpperCase()}: Option "reference" provided type "object" without a  d "getBoundingClientRect" method.`);
       }
 
       return config;
@@ -3572,7 +3572,7 @@
   class Tooltip extends BaseComponent {
     constructor(element, config) {
       if (typeof Popper__namespace === 'undefined') {
-        throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
+        throw new TypeError('Bootstrap\'s tooltips   Popper (https://popper.js.org)');
       }
 
       super(element); // private

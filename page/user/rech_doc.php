@@ -1,5 +1,5 @@
 <?php
-require_once('../conect.php'); // Connexion à la base de données
+ require_once('../conect.php'); // Connexion à la base de données
 
 // On vérifie si la session de l'utilisateur est active ou non
 if (!$_SESSION['user_id']) {

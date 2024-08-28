@@ -1,5 +1,5 @@
 <?php
-require_once('../conect.php');
+ require_once('../conect.php');
 
 // Vérification si l'ID est passé en paramètre
 if (!isset($_GET['id'])) {
