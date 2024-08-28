@@ -35,7 +35,7 @@ if (!$_SESSION['user_id']) {
         <h1 class="text-center mb-4"> Bienvenue sur votre page <strong><?php echo $_SESSION['nom_util'] ?></strong></h1>
         </h1>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card text-white bg-warning mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Gérer les Documents</h5>
@@ -44,16 +44,25 @@ if (!$_SESSION['user_id']) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-secondary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Gérer les Categories</h5>
+                        <p class="card-text">Ajouter, modifier ou supprimer des Categories.</p>
+                        <a href="gere_cat.php" class="btn btn-light">Gérer</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="card text-white bg-info mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Suivre les Versions</h5>
-                        <p class="card-text">Gérer les versions des documents.</p>
+                        <p class="card-text">Gérer les versions des documents.</p><br>
                         <a href="suivre_ver.php" class="btn btn-light">Voir les Versions</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card text-white bg-danger mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Gérer les Permissions</h5>

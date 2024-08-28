@@ -1,5 +1,5 @@
 <?php
- require_once( 'conect.php');
+require_once('conect.php');
 
 $erreu = "";
 $erre = "";
@@ -58,7 +58,7 @@ if (isset($_POST['login'])) {
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Veuillez entrer l'email associé à votre compte :</label>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="Entrez votre email"  d>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Entrez votre email" d>
                     <div class="invalid-feedback">
                         Veuillez entrer une adresse email valide.
                     </div>
