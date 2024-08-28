@@ -34,7 +34,7 @@ if (!$_SESSION['user_id']) {
         <h1 class="text-center mb-4"> Bienvenue sur votre page <strong><?php echo $_SESSION['nom_util'] ?></strong></h1>
         </h1>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card text-white bg-primary mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Gérer les Utilisateurs</h5>
@@ -43,7 +43,7 @@ if (!$_SESSION['user_id']) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card text-white bg-secondary mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Surveillance du Système</h5>
@@ -52,7 +52,16 @@ if (!$_SESSION['user_id']) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Atribuer des permissions</h5>
+                        <p class="card-text">Surveiller des permission sur les documents</p>
+                        <a href="atri_per.php" class="btn btn-light">Voir les permission</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="card text-white bg-success mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Paramètres de l'Application</h5>
