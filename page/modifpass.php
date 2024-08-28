@@ -10,6 +10,7 @@ if (!isset($_SESSION['recup'])) {
 $email = $_SESSION['recup'];
 $erreu = "";
 $erre = "";
+$erres = "";
 
 if (isset($_POST['login'])) {
     if (!empty($_POST['pass']) && !empty($_POST['pass2'])) {
@@ -22,7 +23,8 @@ if (isset($_POST['login'])) {
             $hashedPass = password_hash($pass1, PASSWORD_BCRYPT);
             $sql = $con->prepare("UPDATE utilisateur SET MOT_DE_PASSE=? WHERE EMAIL=?");
             $sql->execute(array($hashedPass, $email));
-            header('location: connexionInscription.php');
+            echo "<script> alert('Votre Mot De Pass As Ete Modifier Avec Success');window.location.href = 'connexionInscription.php';</script>";
+            // header('location: connexionInscription.php');
             exit();
         }
     } else {
@@ -45,18 +47,20 @@ if (isset($_POST['login'])) {
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="cc-nav navbar nav-dark ">
         <div class="container-fluid">
-            <a class="navbar-brand" href="home.php">
-                <img src="img/simro_logo.PNG" alt="SIMRO Logo" width="100" height="100" class="d-inline-block align-text-top">
+            <!-- image du logo -->
+            <a class="navbar-brand py-1 mx-3" href="home.php">
+                <img src="img/simro_logo.PNG" alt="" width="100" height="100" class="d-inline-block align-text-top">
             </a>
+            <!-- liste des element du  menue -->
             <h1 class="fw-bolder"><i style="color: #120cef;">SIMRO</i><i style="color: #f3940b;">GED</i></h1>
-            <div class="d-flex">
-                <a href="connexionInscription.php" class="btn btn-primary me-2"><i class='bx bx-user-plus'></i> S'INSCRIRE</a>
-                <a href="connexionInscription.php" class="btn btn-secondary"><i class='bx bx-log-in'></i> SE CONNECTER</a>
-            </div>
+            <ul class="navbar-nav ms-auto mb-2lg-0">
+                <li><a style=" font-size: 25px; " href="connexionInscription.php" class="btn btn-lg btn-in my-2"><i class='bx bx-user-plus'></i> S'INSCRIRE</a></li>
+                <li><a style=" font-size: 25px; " href="connexionInscription.php" class="btn btn-con"><i class='bx bx-log-in'></i> SE CONNECTER</a></li>
+            </ul>
         </div>
-    </nav>
+    </nav><br><br><br><br><br>
 
     <div class="container my-5">
         <section class="bg-light p-5 rounded shadow">
@@ -91,9 +95,14 @@ if (isset($_POST['login'])) {
                     </div>
                 <?php } ?>
 
+                <?php if (!empty( $erres)) { ?>
+                    <div class="alert alert-success" role="alert">
+                        <?php echo  $erres; ?>
+                    </div>
+                <?php } ?>
                 <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href = 'password_oublier.php';">Annuler</button>
-                    <button type="submit" class="btn btn-primary" name="login">Modifier</button>
+                    <button type="button" class="btn btn-lg cancel-button" onclick="window.location.href = 'password_oublier.php';">Annuler</button>
+                    <button type="submit" class="btn btn-lg submit-button" name="login">Modifier</button>
                 </div>
             </form>
         </section>

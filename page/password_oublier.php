@@ -43,7 +43,7 @@ if (isset($_POST['login'])) {
                 <img src="img/simro_logo.PNG" alt="" width="100" height="100" class="d-inline-block align-text-top">
             </a>
             <!-- liste des element du  menue -->
-            <h1 class="fw-bolder"><i style="color: #120cef;">SIMRO</i><i style="color: #f3940b;">CHAT</i></h1>
+            <h1 class="fw-bolder"><i style="color: #120cef;">SIMRO</i><i style="color: #f3940b;">GED</i></h1>
             <ul class="navbar-nav ms-auto mb-2lg-0">
                 <li><a style=" font-size: 25px; " href="connexionInscription.php" class="btn btn-lg btn-in my-2"><i class='bx bx-user-plus'></i> S'INSCRIRE</a></li>
                 <li><a style=" font-size: 25px; " href="connexionInscription.php" class="btn btn-con"><i class='bx bx-log-in'></i> SE CONNECTER</a></li>
@@ -77,8 +77,8 @@ if (isset($_POST['login'])) {
                 <?php } ?>
 
                 <div class="d-flex justify-content-between">
-                    <button type="button" class="btn cancel-button" onclick="window.location.href = 'connexionInscription.php';">Annuler</button>
-                    <button type="submit" class="btn submit-button " name="login">Rechercher</button>
+                    <button type="button" class="btn btn-lg cancel-button" onclick="window.location.href = 'connexionInscription.php';">Annuler</button>
+                    <button type="submit" class="btn btn-lg submit-button " name="login">Rechercher</button>
                 </div>
             </form>
         </section>
