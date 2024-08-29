@@ -42,8 +42,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
                     $stmt->execute();
 
+                    // Insérer l'action de modification dans la table audit_logs
+                    $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+                    $stmtAudit = $con->prepare($sqlAudit);
+                    $action = "MODIFICATION DU DOCUMENT " . $documentId;
+                    $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+                    $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+                    $stmtAudit->execute();
+
                     $alertMessage = 'Document modifié avec succès.';
                 } else {
+                    $userId = $_SESSION['user_id']; // L'ID de l'utilisateur connecté
                     // Ajout
                     $sql = "INSERT INTO document (ID_UTILISATEUR, TITRE, DESCRIPTION, FILE_PATH, CREATED_AT) VALUES (:id_utilisateur, :titre, :description, :file_path, NOW())";
                     $stmt = $con->prepare($sql);
@@ -69,6 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
                     $stmt->bindParam(':id_categories', $categorieId, PDO::PARAM_INT);
                     $stmt->execute();
+                    // Insérer l'action de téléchargement dans la table audit_logs
+                    $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+                    $stmtAudit = $con->prepare($sqlAudit);
+                    $action = "INSERSION DU DOCUMENT " . $documentId; // Utilisez l'ID du document
+                    $stmtAudit->bindParam(':user_id', $userId, PDO::PARAM_INT);
+                    $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+                    $stmtAudit->execute();
+
                     $alertMessage = 'Document ajouté avec succès.';
                 }
 
@@ -112,6 +129,13 @@ if (isset($_GET['id_suprim'])) {
             $stmt = $con->prepare($sql);
             $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
             $stmt->execute();
+            // Insérer l'action de suppression dans la table audit_logs
+            $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+            $stmtAudit = $con->prepare($sqlAudit);
+            $action = "SUPPRESSION DU DOCUMENT " . $documentId;
+            $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+            $stmtAudit->execute();
 
             $alertMessage = 'Document supprimé avec succès.';
             $alertType = 'success';

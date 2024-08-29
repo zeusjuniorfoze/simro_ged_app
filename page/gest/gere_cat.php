@@ -26,6 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':id', $catId, PDO::PARAM_INT);
         $stmt->execute();
 
+        // Insérer l'action de modification dans la table audit_logs
+        $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+        $stmtAudit = $con->prepare($sqlAudit);
+        $action = "MODIFICATION DE LA CATEGORIE " . $catId;
+        $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+        $stmtAudit->execute();
+
         $alertMessage = 'Catégorie modifiée avec succès.';
         $alertType = 'success';
     } else {
@@ -35,6 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':nom', $nom);
         $stmt->bindParam(':description', $description);
         $stmt->execute();
+
+
+        // Récupérer l'ID de la nouvelle catégorie
+        $catId = $con->lastInsertId();
+
+        // Insérer l'action d'ajout dans la table audit_logs
+        $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+        $stmtAudit = $con->prepare($sqlAudit);
+        $action = "AJOUT DE LA CATEGORIE " . $catId;
+        $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+        $stmtAudit->execute();
 
         $alertMessage = 'Catégorie ajoutée avec succès.';
         $alertType = 'success';
@@ -48,6 +68,13 @@ if (isset($_GET['delete'])) {
     $stmt = $con->prepare($sql);
     $stmt->bindParam(':id', $catId, PDO::PARAM_INT);
     $stmt->execute();
+    // Insérer l'action de suppression dans la table audit_logs
+    $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+    $stmtAudit = $con->prepare($sqlAudit);
+    $action = "SUPPRESSION DE LA CATEGORIE " . $catId;
+    $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmtAudit->execute();
 
     $alertMessage = 'Catégorie supprimée avec succès.';
     $alertType = 'success';
