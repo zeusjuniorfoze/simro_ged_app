@@ -1,5 +1,5 @@
-\<?php
- require_once('../conect.php');
+<?php
+require_once('../conect.php');
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
@@ -13,7 +13,11 @@ $pageCourante = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $debut = ($pageCourante - 1) * $logsParPage;
 
 // Récupération des logs avec la limite pour la pagination
-$sql = "SELECT * FROM audit_logs ORDER BY TIMESTAMP DESC LIMIT :debut, :logsParPage";
+$sql = "SELECT A.ID_AUDIT_LOGS, U.NOM_UTIL, A.ACTION, A.TIMESTAMP 
+        FROM audit_logs A 
+        INNER JOIN utilisateur U ON A.ID_UTILISATEUR = U.ID_UTILISATEUR 
+        ORDER BY A.TIMESTAMP DESC 
+        LIMIT :debut, :logsParPage";
 $stmt = $con->prepare($sql);
 $stmt->bindParam(':debut', $debut, PDO::PARAM_INT);
 $stmt->bindParam(':logsParPage', $logsParPage, PDO::PARAM_INT);
@@ -46,6 +50,7 @@ $totalPages = ceil($totalLogs / $logsParPage);
         .btn-danger:hover {
             background-color: #c82333;
         }
+
         .table thead th {
             background-color: #007bff;
             color: white;
@@ -88,12 +93,12 @@ $totalPages = ceil($totalLogs / $logsParPage);
             </thead>
             <tbody>
                 <?php foreach ($logs as $log): ?>
-                <tr>
-                    <td><?= htmlspecialchars($log['ID_AUDIT_LOGS']); ?></td>
-                    <td><?= htmlspecialchars($log['ID_UTILISATEUR']); ?></td>
-                    <td><?= htmlspecialchars($log['ACTION']); ?></td>
-                    <td><?= htmlspecialchars($log['TIMESTAMP']); ?></td>
-                </tr>
+                    <tr>
+                        <td><?= htmlspecialchars($log['ID_AUDIT_LOGS']); ?></td>
+                        <td><?= htmlspecialchars($log['NOM_UTIL']); ?></td>
+                        <td><?= htmlspecialchars($log['ACTION']); ?></td>
+                        <td><?= htmlspecialchars($log['TIMESTAMP']); ?></td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
@@ -105,9 +110,9 @@ $totalPages = ceil($totalLogs / $logsParPage);
                     <a class="page-link" href="?page=<?= $pageCourante - 1; ?>">Précédent</a>
                 </li>
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <li class="page-item <?= $i == $pageCourante ? 'active' : ''; ?>">
-                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
-                </li>
+                    <li class="page-item <?= $i == $pageCourante ? 'active' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                    </li>
                 <?php endfor; ?>
                 <li class="page-item <?= $pageCourante >= $totalPages ? 'disabled' : ''; ?>">
                     <a class="page-link" href="?page=<?= $pageCourante + 1; ?>">Suivant</a>
