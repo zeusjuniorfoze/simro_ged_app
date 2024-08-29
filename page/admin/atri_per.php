@@ -35,15 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
 
         // Insérer les nouvelles permissions
-        foreach ($userPermissions as $userId => $permissionIds) {
-            foreach ($permissionIds as $permissionId) {
-                $sql = "INSERT INTO user_permission (ID_DOCUMENT, ID_UTILISATEUR, ID_PERMISSION) VALUES (:document_id, :user_id, :permission_id)";
-                $stmt = $con->prepare($sql);
-                $stmt->bindParam(':document_id', $documentId, PDO::PARAM_INT);
-                $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-                $stmt->bindParam(':permission_id', $permissionId, PDO::PARAM_INT);
-                $stmt->execute();
-            }
+        foreach ($userPermissions as $userId => $permissionId) {
+            $sql = "INSERT INTO user_permission (ID_DOCUMENT, ID_UTILISATEUR, ID_PERMISSION) VALUES (:document_id, :user_id, :permission_id)";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':document_id', $documentId, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':permission_id', $permissionId, PDO::PARAM_INT);
+            $stmt->execute();
         }
 
         $alertMessage = 'Permissions mises à jour avec succès.';
@@ -57,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,26 +65,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         body {
             background-color: #f8f9fa;
         }
+
         .card-header {
             background-color: #007bff;
             color: white;
         }
+
         .btn-primary {
             background-color: #007bff;
             border: none;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
         .table thead th {
             background-color: #007bff;
             color: white;
         }
+
         .btn-sm {
             padding: 0.25rem 0.5rem;
         }
     </style>
 </head>
+
 <body>
     <div class="container my-5">
         <a href="admin.php" class="btn btn-danger btn-lg">Retour</a>
@@ -99,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <form action="" method="POST">
             <div class="mb-3">
-                <label for="document_id" class="form-label">Sélectionner un Document</label>
+                <label for="document_id" class="form-label">Document</label>
                 <select class="form-select" id="document_id" name="document_id" required>
                     <?php foreach ($documents as $document): ?>
                         <option value="<?= htmlspecialchars($document['ID_DOCUMENT']) ?>">
@@ -109,14 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </select>
             </div>
 
-            <div class="mb-3">
-                <h4>Utilisateurs</h4>
+            <?php foreach ($documents as $document): ?>
+                <h4><?= htmlspecialchars($document['TITRE']) ?></h4>
+
                 <?php foreach ($users as $user): ?>
                     <div class="mb-3">
                         <h5><?= htmlspecialchars($user['NOM_UTIL']) ?></h5>
                         <?php foreach ($permissions as $permission): ?>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="user_permissions[<?= htmlspecialchars($user['ID_UTILISATEUR']) ?>][]" value="<?= htmlspecialchars($permission['ID_PERMISSIONS']) ?>">
+                                <input class="form-check-input" type="checkbox" name="user_permissions[<?= htmlspecialchars($user['ID_UTILISATEUR']) ?>]" value="<?= htmlspecialchars($permission['ID_PERMISSIONS']) ?>">
                                 <label class="form-check-label">
                                     <?= htmlspecialchars($permission['CAN_VIEW']) ?> - <?= htmlspecialchars($permission['CAN_EDIT']) ?> - <?= htmlspecialchars($permission['CAN_DELETE']) ?>
                                 </label>
@@ -124,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php endforeach; ?>
                     </div>
                 <?php endforeach; ?>
-            </div>
+            <?php endforeach; ?>
 
             <button type="submit" class="btn btn-primary">Enregistrer</button>
         </form>
@@ -132,4 +138,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script src="../boostrap/js/bootstrap.min.js"></script>
 </body>
+
 </html>

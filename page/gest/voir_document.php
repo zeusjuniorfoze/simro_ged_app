@@ -1,5 +1,5 @@
 <?php
- require_once('../conect.php');
+require_once('../conect.php');
 
 // Vérifiez si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 // Vérifiez si un ID de version de document est passé dans l'URL
 if (isset($_GET['id'])) {
     $versionId = $_GET['id'];
+    $userId = $_SESSION['user_id']; // L'ID de l'utilisateur connecté
 
     // Récupérer les informations de la version du document
     $sql = "SELECT dv.FILE_PATH_D, d.TITRE 
@@ -26,6 +27,14 @@ if (isset($_GET['id'])) {
         $fileName = $documentVersion['TITRE'] . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
 
         if (file_exists($filePath)) {
+            // Insérer l'action de téléchargement dans la table audit_logs
+            $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+            $stmtAudit = $con->prepare($sqlAudit);
+            $action = "Téléchargement du document ID " . $versionId; // Description de l'action
+            $stmtAudit->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+            $stmtAudit->execute();
+
             // Forcer le téléchargement du fichier
             header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
@@ -37,7 +46,7 @@ if (isset($_GET['id'])) {
             readfile($filePath);
             exit;
         } else {
-            $_SESSION['erreur'] = "Ce Document N'existe Plu !";
+            $_SESSION['erreur'] = "Ce Document N'existe Plus !";
             $alertType = 'warning';
         }
     } else {
@@ -46,3 +55,4 @@ if (isset($_GET['id'])) {
 } else {
     echo "Aucun document spécifié.";
 }
+?>
