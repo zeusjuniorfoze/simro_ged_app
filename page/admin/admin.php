@@ -53,7 +53,7 @@ if (!$_SESSION['user_id']) {
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card text-white bg-info mb-3">
+                <div class="card text-white bg-danger mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Atribuer des permissions</h5>
                         <p class="card-text">Surveiller des permission sur les documents</p>

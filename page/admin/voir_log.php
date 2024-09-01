@@ -16,18 +16,20 @@ $debut = ($pageCourante - 1) * $logsParPage;
 $sql = "SELECT A.ID_AUDIT_LOGS, U.NOM_UTIL, A.ACTION, A.TIMESTAMP 
         FROM audit_logs A 
         INNER JOIN utilisateur U ON A.ID_UTILISATEUR = U.ID_UTILISATEUR 
-        ORDER BY A.TIMESTAMP DESC 
+        ORDER BY A.TIMESTAMP ASC 
         LIMIT :debut, :logsParPage";
 $stmt = $con->prepare($sql);
-$stmt->bindParam(':debut', $debut, PDO::PARAM_INT);
-$stmt->bindParam(':logsParPage', $logsParPage, PDO::PARAM_INT);
+$stmt->bindValue(':debut', $debut, PDO::PARAM_INT);
+$stmt->bindValue(':logsParPage', $logsParPage, PDO::PARAM_INT);
 $stmt->execute();
 $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Récupération du nombre total de logs pour la pagination
 $sqlTotal = "SELECT COUNT(*) FROM audit_logs";
 $totalLogs = $con->query($sqlTotal)->fetchColumn();
 $totalPages = ceil($totalLogs / $logsParPage);
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -106,22 +108,30 @@ $totalPages = ceil($totalLogs / $logsParPage);
         <!-- Pagination -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
+                <!-- Bouton "Précédent" -->
                 <li class="page-item <?= $pageCourante <= 1 ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?= $pageCourante - 1; ?>">Précédent</a>
+                    <a class="page-link" href="?page=<?= $pageCourante - 1; ?>" aria-label="Précédent">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
+
+                <!-- Lien pour chaque page -->
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                     <li class="page-item <?= $i == $pageCourante ? 'active' : ''; ?>">
                         <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
                     </li>
                 <?php endfor; ?>
+
+                <!-- Bouton "Suivant" -->
                 <li class="page-item <?= $pageCourante >= $totalPages ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?= $pageCourante + 1; ?>">Suivant</a>
+                    <a class="page-link" href="?page=<?= $pageCourante + 1; ?>" aria-label="Suivant">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
                 </li>
             </ul>
         </nav>
-    </div>
 
-    <script src="../boostrap/js/bootstrap.min.js"></script>
+        <script src="../boostrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>

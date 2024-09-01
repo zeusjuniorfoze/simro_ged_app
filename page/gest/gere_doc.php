@@ -13,98 +13,136 @@ $alertType = '';
 
 // Ajout ou modification de documents
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_FILES['docFile']) && !empty($_FILES['docFile']['name'])) {
-        $titre = $_POST['docTitle'];
-        $description = $_POST['docDescription'];
-        $categorieId = $_POST['docCategory'];
-        $filePath = '../uploads/' . basename($_FILES['docFile']['name']); // Chemin du fichier
+    $titre = $_POST['docTitle'];
+    $description = $_POST['docDescription'];
+    $categorieId = $_POST['docCategory'];
+    $documentId = isset($_POST['docId']) ? $_POST['docId'] : null;
+
+    // Vérifie si un fichier a été uploadé
+    $fileUploaded = isset($_FILES['docFile']) && !empty($_FILES['docFile']['name']);
+
+    // Chemin du fichier à utiliser (soit le nouveau fichier uploadé, soit l'ancien chemin)
+    $filePath = '';
+
+    if ($fileUploaded) {
+        $filePath = '../uploads/' . basename($_FILES['docFile']['name']); // Nouveau fichier
 
         // Déplacement du fichier uploadé vers le répertoire cible
-        if (move_uploaded_file($_FILES['docFile']['tmp_name'], $filePath)) {
-            try {
-                $con->beginTransaction();
-
-                if (isset($_POST['docId']) && !empty($_POST['docId'])) { // Modification
-                    $documentId = $_POST['docId'];
-                    $sql = "UPDATE document SET TITRE = :titre, DESCRIPTION = :description, FILE_PATH = :file_path WHERE ID_DOCUMENT = :id_document";
-                    $stmt = $con->prepare($sql);
-                    $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
-                    $stmt->bindParam(':titre', $titre);
-                    $stmt->bindParam(':description', $description);
-                    $stmt->bindParam(':file_path', $filePath);
-                    $stmt->execute();
-
-                    // Mettre à jour la version existante
-                    $sql = "UPDATE document_version SET FILE_PATH_D = :file_path, UPDATED_BY = :updated_by WHERE ID_DOCUMENT = :id_document AND VERSION_NUMBER = 'v1'";
-                    $stmt = $con->prepare($sql);
-                    $stmt->bindParam(':file_path', $filePath);
-                    $stmt->bindParam(':updated_by', $_SESSION['user_id'], PDO::PARAM_INT);
-                    $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
-                    $stmt->execute();
-
-                    // Insérer l'action de modification dans la table audit_logs
-                    $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
-                    $stmtAudit = $con->prepare($sqlAudit);
-                    $action = "MODIFICATION DU DOCUMENT " . $documentId;
-                    $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-                    $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
-                    $stmtAudit->execute();
-
-                    $alertMessage = 'Document modifié avec succès.';
-                } else {
-                    $userId = $_SESSION['user_id']; // L'ID de l'utilisateur connecté
-                    // Ajout
-                    $sql = "INSERT INTO document (ID_UTILISATEUR, TITRE, DESCRIPTION, FILE_PATH, CREATED_AT) VALUES (:id_utilisateur, :titre, :description, :file_path, NOW())";
-                    $stmt = $con->prepare($sql);
-                    $stmt->bindParam(':id_utilisateur', $_SESSION['user_id'], PDO::PARAM_INT);
-                    $stmt->bindParam(':titre', $titre);
-                    $stmt->bindParam(':description', $description);
-                    $stmt->bindParam(':file_path', $filePath);
-                    $stmt->execute();
-
-                    $documentId = $con->lastInsertId();
-
-                    // Ajouter la version initiale du document
-                    $sql = "INSERT INTO document_version (ID_DOCUMENT, VERSION_NUMBER, FILE_PATH_D, CREATED_AT_D, UPDATED_BY) 
-                            VALUES (:id_document, 'v1', :file_path, NOW(), :updated_by)";
-                    $stmt = $con->prepare($sql);
-                    $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
-                    $stmt->bindParam(':file_path', $filePath);
-                    $stmt->bindParam(':updated_by', $_SESSION['user_id'], PDO::PARAM_INT);
-                    $stmt->execute();
-                    // Associer le document à la catégorie choisie
-                    $sql = "INSERT INTO contenir (ID_DOCUMENT, ID_CATEGORIES) VALUES (:id_document, :id_categories)";
-                    $stmt = $con->prepare($sql);
-                    $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
-                    $stmt->bindParam(':id_categories', $categorieId, PDO::PARAM_INT);
-                    $stmt->execute();
-                    // Insérer l'action de téléchargement dans la table audit_logs
-                    $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
-                    $stmtAudit = $con->prepare($sqlAudit);
-                    $action = "INSERSION DU DOCUMENT " . $documentId; // Utilisez l'ID du document
-                    $stmtAudit->bindParam(':user_id', $userId, PDO::PARAM_INT);
-                    $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
-                    $stmtAudit->execute();
-
-                    $alertMessage = 'Document ajouté avec succès.';
-                }
-
-                $con->commit();
-                $alertType = 'success';
-            } catch (PDOException $e) {
-                $con->rollBack();
-                $alertMessage = 'Erreur : ' . $e->getMessage();
-                $alertType = 'danger';
-            }
-        } else {
+        if (!move_uploaded_file($_FILES['docFile']['tmp_name'], $filePath)) {
             $alertMessage = 'Échec de l\'upload du fichier.';
             $alertType = 'warning';
+            // Arrêter l'exécution si le fichier ne peut pas être déplacé
+            return;
         }
-    } else {
+    } elseif ($documentId) {
+        // Si modification et pas de nouveau fichier, récupérer l'ancien chemin du fichier
+        $sql = "SELECT FILE_PATH FROM document WHERE ID_DOCUMENT = :id_document";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
+        $stmt->execute();
+        $document = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($document) {
+            $filePath = $document['FILE_PATH']; // Utiliser l'ancien chemin
+        }
+    }
+
+    // Vérification finale si le chemin du fichier est vide
+    if (empty($filePath)) {
         $alertMessage = 'Veuillez sélectionner un fichier.';
         $alertType = 'warning';
+        return;
+    }
+
+    try {
+        $con->beginTransaction();
+
+        if ($documentId) { // Modification
+            $sql = "UPDATE document SET TITRE = :titre, DESCRIPTION = :description, FILE_PATH = :file_path WHERE ID_DOCUMENT = :id_document";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
+            $stmt->bindParam(':titre', $titre);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':file_path', $filePath);
+            $stmt->execute();
+
+            // Mettre à jour la version existante
+            $sql = "UPDATE document_version SET FILE_PATH_D = :file_path, UPDATED_BY = :updated_by WHERE ID_DOCUMENT = :id_document AND VERSION_NUMBER = 'v1'";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':file_path', $filePath);
+            $stmt->bindParam(':updated_by', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Insérer l'action de modification dans la table audit_logs
+            $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+            $stmtAudit = $con->prepare($sqlAudit);
+            $action = "MODIFICATION DU DOCUMENT " . $documentId;
+            $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+            $stmtAudit->execute();
+
+            $alertMessage = 'Document modifié avec succès.';
+        } else {
+            // Ajout d'un nouveau document
+            $sql = "INSERT INTO document (ID_UTILISATEUR, TITRE, DESCRIPTION, FILE_PATH, CREATED_AT) VALUES (:id_utilisateur, :titre, :description, :file_path, NOW())";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':id_utilisateur', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':titre', $titre);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':file_path', $filePath);
+            $stmt->execute();
+
+            $documentId = $con->lastInsertId();
+
+            // Ajouter la version initiale du document
+            $sql = "INSERT INTO document_version (ID_DOCUMENT, VERSION_NUMBER, FILE_PATH_D, CREATED_AT_D, UPDATED_BY) 
+                    VALUES (:id_document, 'v1', :file_path, NOW(), :updated_by)";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
+            $stmt->bindParam(':file_path', $filePath);
+            $stmt->bindParam(':updated_by', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Associer le document à la catégorie choisie
+            $sql = "INSERT INTO contenir (ID_DOCUMENT, ID_CATEGORIES) VALUES (:id_document, :id_categories)";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
+            $stmt->bindParam(':id_categories', $categorieId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Insérer l'action de téléchargement dans la table audit_logs
+            $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+            $stmtAudit = $con->prepare($sqlAudit);
+            $action = "INSERSION DU DOCUMENT " . $documentId;
+            $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+            $stmtAudit->execute();
+
+            $alertMessage = 'Document ajouté avec succès.';
+        }
+
+        $con->commit();
+        $alertType = 'success';
+    } catch (PDOException $e) {
+        $con->rollBack();
+        $alertMessage = 'Erreur : ' . $e->getMessage();
+        $alertType = 'danger';
     }
 }
+
+$docToEdit = null;
+if (isset($_GET['id_mofi'])) {
+    $documentId = $_GET['id_mofi'];
+    $sql = "SELECT d.ID_DOCUMENT, d.TITRE, d.DESCRIPTION, c.ID_CATEGORIES
+            FROM document d
+            JOIN contenir c ON d.ID_DOCUMENT = c.ID_DOCUMENT
+            WHERE d.ID_DOCUMENT = :id_document";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':id_document', $documentId, PDO::PARAM_INT);
+    $stmt->execute();
+    $docToEdit = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 
 // Suppression de documents
 if (isset($_GET['id_suprim'])) {
@@ -216,16 +254,19 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 <?php endif; ?>
                 <form method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="docId" value="<?= isset($_GET['id_mofi']) ? htmlspecialchars($_GET['id_mofi']) : '' ?>">
+                    <input type="hidden" name="docId" value="<?= isset($docToEdit) ? htmlspecialchars($docToEdit['ID_DOCUMENT']) : '' ?>">
                     <div class="mb-3">
                         <label for="docTitle" class="form-label">Titre du Document</label>
-                        <input type="text" class="form-control" id="docTitle" name="docTitle" placeholder="Titre du document">
+                        <input type="text" class="form-control" id="docTitle" name="docTitle"
+                            value="<?= isset($docToEdit) ? htmlspecialchars($docToEdit['TITRE']) : '' ?>"
+                            placeholder="Titre du document">
                     </div>
                     <div class="mb-3">
                         <label for="docCategory" class="form-label">Catégorie</label>
                         <select class="form-select" id="docCategory" name="docCategory">
                             <?php foreach ($categories as $category): ?>
-                                <option value="<?= htmlspecialchars($category['ID_CATEGORIES']) ?>">
+                                <option value="<?= htmlspecialchars($category['ID_CATEGORIES']) ?>"
+                                    <?= isset($docToEdit) && $docToEdit['ID_CATEGORIES'] == $category['ID_CATEGORIES'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($category['NOM']) ?>
                                 </option>
                             <?php endforeach; ?>
@@ -233,7 +274,8 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     <div class="mb-3">
                         <label for="docDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="docDescription" name="docDescription" rows="3" placeholder="Description du document"></textarea>
+                        <textarea class="form-control" id="docDescription" name="docDescription" rows="3"
+                            placeholder="Description du document"><?= isset($docToEdit) ? htmlspecialchars($docToEdit['DESCRIPTION']) : '' ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="docFile" class="form-label">Fichier</label>
@@ -241,6 +283,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                 </form>
+
             </div>
         </div>
 

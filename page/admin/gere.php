@@ -72,7 +72,6 @@ if (isset($_GET['id_suprim'])) {
         $alertType = 'danger';
     }
 }
-
 // Gestion de l'affichage des informations d'un utilisateur pour modification
 $userToEdit = null;
 if (isset($_GET['id_modifier'])) {
@@ -171,7 +170,6 @@ $result = $con->query("SELECT * FROM utilisateur WHERE ID_UTILISATEUR  != {$_SES
                 </form>
             </div>
         </div>
-
         <!-- Formulaire pour modifier un utilisateur -->
         <?php if ($userToEdit): ?>
             <div class="card mb-4">
