@@ -55,8 +55,8 @@ if (!$_SESSION['user_id']) {
             <div class="col-md-3">
                 <div class="card text-white bg-danger mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Atribuer des permissions</h5>
-                        <p class="card-text">Surveiller des permission sur les documents</p>
+                        <h5 class="card-title">Gérer les permissions</h5>
+                        <p class="card-text">Ajouter, modifier ou supprimer des permissions.</p>
                         <a href="atri_per.php" class="btn btn-light">Voir les permission</a>
                     </div>
                 </div>

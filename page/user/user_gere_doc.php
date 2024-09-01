@@ -193,7 +193,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= htmlspecialchars($document['DESCRIPTION']) ?></td>
                             <td><?= htmlspecialchars($document['CREATED_AT']) ?></td>
                             <td>
-                                <a href="user_voir_document.php?id=<?= htmlspecialchars($do['ID_DOCUMENT']) ?>&& downloaded=1" class="btn btn-primary btn-sm">Télécharger</a>
+                                <a href="user_voir_document.php?id=<?= htmlspecialchars($document['ID_DOCUMENT']) ?>&& downloaded=1" class="btn btn-primary btn-sm">Télécharger</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

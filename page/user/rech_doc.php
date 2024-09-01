@@ -1,9 +1,10 @@
 <?php
- require_once('../conect.php'); // Connexion à la base de données
+require_once('../conect.php'); // Connexion à la base de données
 
 // On vérifie si la session de l'utilisateur est active ou non
-if (!$_SESSION['user_id']) {
+if (!isset($_SESSION['user_id'])) {
     header('location: ../connexionInscription.php');
+    exit();
 }
 
 // Récupération des catégories depuis la base de données
@@ -22,6 +23,7 @@ $searchDate = '';
 
 // Vérification si le formulaire de recherche a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
     if (isset($_GET['searchTitle'])) {
         $searchTitle = trim($_GET['searchTitle']);
     }
@@ -33,10 +35,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     // Construction de la requête SQL dynamique
-    $query = "SELECT d.ID_DOCUMENT, d.TITRE, c.NOM AS CATEGORIE, d.CREATED_AT FROM document d
-              LEFT JOIN contenir con ON d.ID_DOCUMENT = con.ID_DOCUMENT
+    $query = "SELECT d.ID_DOCUMENT, d.TITRE, c.NOM AS CATEGORIE, d.CREATED_AT 
+              FROM document d 
+              LEFT JOIN contenir con ON d.ID_DOCUMENT = con.ID_DOCUMENT 
               LEFT JOIN categories c ON con.ID_CATEGORIES = c.ID_CATEGORIES
               WHERE 1=1"; // Clause toujours vraie pour faciliter l'ajout dynamique des conditions
+
+    // Enregistrement de l'action dans les logs d'audit
+    $sqlAudit = "INSERT INTO audit_logs (ID_UTILISATEUR, ACTION, TIMESTAMP) VALUES (:user_id, :action, NOW())";
+    $stmtAudit = $con->prepare($sqlAudit);
+    $action = "EFFECTUER UNE RECHERCHE"; // Action générique sans utilisation de $documentId
+    $stmtAudit->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmtAudit->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmtAudit->execute();
 
     $params = [];
 
@@ -90,7 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         .alert {
             margin-bottom: 20px;
-            /* Espacement sous les alertes */
         }
     </style>
 
@@ -149,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                             <td><?= htmlspecialchars($document['CATEGORIE']) ?></td>
                             <td><?= htmlspecialchars($document['CREATED_AT']) ?></td>
                             <td>
-                                <a href="#" class="btn btn-primary btn-sm">Télécharger</a>
+                                <a href="user_voir_document.php?id=<?= htmlspecialchars($document['ID_DOCUMENT']) ?>&& downloaded=1" class="btn btn-primary btn-sm">Télécharger</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
